@@ -1,27 +1,30 @@
 class Solution {
 public:
     vector<vector<int>> ans;
-    void permutations(string str, vector<int> permutation){
-        if(str.size() == 0) {
+    void backtracking(vector<int>& nums, vector<bool>& vis, vector<int>& permutation){ // TC : O(n!) & SC : O(n!)
+        if(permutation.size() == nums.size()) {
             ans.push_back(permutation); 
             return;
         }
 
-        for(int i = 0; i < str.size(); i++){
-            permutation.push_back(int(str[i]));
-            string newStr = str.substr(0,i) + str.substr(i+1, str.size() - i - 1);
-            permutations(newStr, permutation);
+        for(int i = 0; i < nums.size(); i++){
+            if(vis[i]) continue;
+
+            permutation.push_back(nums[i]);
+            vis[i] = true;
+
+            backtracking(nums, vis, permutation);
+
             permutation.pop_back();
+            vis[i] = false;
         }
     }
     vector<vector<int>> permute(vector<int>& nums) {
-        string str = "";
 
-        for(int num : nums) 
-            str += char(num);
-        
+        vector<bool> vis(nums.size(),false);
         vector<int> permutation;
-        permutations(str, permutation);
+
+        backtracking(nums, vis, permutation);
 
         return ans;
     }
